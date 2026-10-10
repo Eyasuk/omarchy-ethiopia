@@ -41,14 +41,20 @@ export function Sponsors() {
             <div className="flex flex-wrap items-center gap-6">
               <Link
                 href={`/meetup/sponsors/${sponsor.slug}`}
-                className="relative h-14 w-40 transition hover:opacity-85"
+                className={
+                  sponsor.avatar
+                    ? "relative h-14 w-14 shrink-0 overflow-hidden rounded-full border border-white/10 transition hover:opacity-85"
+                    : "relative h-14 w-40 transition hover:opacity-85"
+                }
                 title={`View ${sponsor.name} details`}
               >
                 <Image
                   src={sponsor.logo}
-                  alt={`${sponsor.name} logo`}
+                  alt={sponsor.avatar ? `${sponsor.name} photo` : `${sponsor.name} logo`}
                   fill
-                  className="object-contain object-left"
+                  className={
+                    sponsor.avatar ? "object-cover" : "object-contain object-left"
+                  }
                   priority
                 />
               </Link>

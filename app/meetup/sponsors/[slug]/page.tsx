@@ -75,12 +75,18 @@ export default async function SponsorDetailPage({
         <div className="mt-10 grid gap-10 md:grid-cols-[280px_1fr]">
           {/* Left Sticky Sidebar */}
           <aside className="self-start rounded-2xl border border-white/10 bg-[#0e0f14] p-6 md:sticky md:top-10">
-            <div className="relative flex aspect-[16/9] w-full items-center justify-center overflow-hidden rounded-xl border border-tibeb-gold/25 bg-black/40 p-4">
+            <div
+              className={
+                sponsor.avatar
+                  ? "relative mx-auto aspect-square w-full max-w-[220px] overflow-hidden rounded-full border border-tibeb-gold/25 bg-black/40"
+                  : "relative flex aspect-[16/9] w-full items-center justify-center overflow-hidden rounded-xl border border-tibeb-gold/25 bg-black/40 p-4"
+              }
+            >
               <Image
                 src={sponsor.logo}
-                alt={`${sponsor.name} logo`}
+                alt={sponsor.avatar ? `${sponsor.name} photo` : `${sponsor.name} logo`}
                 fill
-                className="object-contain p-2"
+                className={sponsor.avatar ? "object-cover" : "object-contain p-2"}
                 priority
               />
             </div>
