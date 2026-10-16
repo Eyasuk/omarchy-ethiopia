@@ -1,0 +1,38 @@
+[
+  {
+    "id": "2002",
+    "name": "Lone Snow",
+    "category": "Dark Theme",
+    "link": "https://github.com/MahderK/omarchy-lone-snow-theme",
+    "author": "Mahder Kassaw",
+    "screenshot": "https://raw.githubusercontent.com/MahderK/omarchy-lone-snow-theme/main/preview.png",
+    "tags": [
+      "unofficial",
+      "ethiopia"
+    ]
+  },
+  {
+    "id": "2003",
+    "name": "Golden Ethiopia",
+    "category": "Dark Theme",
+    "link": "https://github.com/samuelk37/omarchy-golden-ethiopia-theme",
+    "author": "samuel",
+    "screenshot": "https://raw.githubusercontent.com/samuelk37/omarchy-golden-ethiopia-theme/main/preview.png",
+    "tags": [
+      "unofficial",
+      "ethiopia"
+    ]
+  },
+  {
+    "id": "2007",
+    "name": "Tibeb - \u1325\u1260\u1265",
+    "category": "Dark Theme",
+    "link": "https://github.com/dan-seng/tibeb-theme",
+    "author": "Daniel Gidey",
+    "screenshot": "https://raw.githubusercontent.com/dan-seng/tibeb-theme/main/preview.png",
+    "tags": [
+      "unofficial",
+      "ethiopia"
+    ]
+  }
+]
