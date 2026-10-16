@@ -9,6 +9,10 @@
     "cultural_authenticity": 0.5,
     "visual_craft": 0.5
   },
-  "judges": [],
+  "judges": [
+    "Dagmawi Babi",
+    "Chapi",
+    "Nati"
+  ],
   "scores": {}
 }

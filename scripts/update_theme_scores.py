@@ -166,14 +166,15 @@ def main():
             print(f"warn: unmatched theme '{raw_id or raw_name}' (judge {judge})", file=sys.stderr)
             continue
 
+        if judge not in judges:
+            judges.append(judge)
+
         levels = {key: parse_level(row.get(columns[key])) for key, _ in RUBRIC}
         if any(value is None for value in levels.values()):
             continue
 
         total = sum((levels[key] / SCALE_MAX) * weight for key, weight in RUBRIC) * 100
         totals.setdefault(theme_id, []).append(round(total, 1))
-        if judge not in judges:
-            judges.append(judge)
 
     scores_out = {}
     for theme in themes:
