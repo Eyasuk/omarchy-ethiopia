@@ -20,7 +20,7 @@ export default function ThemesPage() {
 
   return (
     <div className="min-h-screen bg-[#08090c] flex flex-col">
-      <main className="mx-auto w-full max-w-5xl flex-1 px-6 pt-10 pb-20">
+      <main className="mx-auto w-full max-w-6xl flex-1 px-6 pt-10 pb-20">
         {/* Back navigation */}
         <div className="flex items-center">
           <Link
@@ -94,7 +94,7 @@ export default function ThemesPage() {
         </header>
 
         {/* Themes grid */}
-        <ul className="grid gap-x-4 gap-y-7 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2">
           {filteredThemes.map((theme) => (
             <li key={theme.id}>
               <a
