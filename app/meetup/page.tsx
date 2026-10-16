@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, ArrowLeft } from "lucide-react";
 import { Footer } from "@/components/Footer";
 import { Speakers } from "@/components/Speakers";
 import { Sponsors } from "@/components/Sponsors";
 import { meetup2026, registrationLink } from "@/data/event";
+import themesQr from "@/public/assets/graphics/themes-qr.svg";
 
 export const metadata: Metadata = {
   title: "Meetup 2026",
@@ -29,6 +31,9 @@ export default function MeetupPage() {
           <div className="flex items-center gap-4 font-mono text-xs text-cream/50">
             <a href="#speakers" className="hover:text-tibeb-gold transition">
               #speakers
+            </a>
+            <a href="#themes" className="hover:text-tibeb-gold transition">
+              #themes
             </a>
             <a href="#rsvp" className="hover:text-tibeb-gold transition">
               #rsvp
@@ -87,6 +92,62 @@ export default function MeetupPage() {
         <div className="mx-auto w-full max-w-4xl px-6 py-16">
           {/* Featured Speakers Section */}
           <Speakers />
+
+          {/* Theme Competition */}
+          <div className="mt-24 pt-12 border-t border-white/[0.08]">
+            <section id="themes" className="w-full scroll-mt-20">
+              <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                <a
+                  href="#themes"
+                  className="group inline-flex items-center gap-2 transition hover:text-tibeb-gold"
+                  title="Direct link to Theme Competition"
+                >
+                  <span>Theme Competition</span>
+                  <span
+                    aria-hidden="true"
+                    className="font-mono text-xl text-tibeb-gold/40 transition-opacity group-hover:opacity-100 group-hover:text-tibeb-gold"
+                  >
+                    #
+                  </span>
+                </a>
+              </h2>
+
+              <div className="mt-8 grid grid-cols-1 gap-6 rounded-xl border border-white/10 bg-[#0e0f14] p-6 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-10 sm:p-8">
+                <div>
+                  <p className="text-sm leading-relaxed text-cream/75 sm:text-base">
+                    Community-built Ethiopian themes are competing for a 10,000
+                    ETB prize pool. Scan the code or open the leaderboard to see
+                    who&apos;s winning and cast your vote with a GitHub reaction.
+                  </p>
+                  <div className="mt-6 flex flex-wrap items-center gap-3 font-mono text-xs">
+                    <Link
+                      href="/themes"
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-tibeb-gold px-6 py-3 font-bold text-black transition hover:bg-tibeb-gold-bright shadow-lg"
+                    >
+                      <span>View the leaderboard</span>
+                      <ArrowUpRight className="h-3.5 w-3.5" />
+                    </Link>
+                    <span className="text-cream/40">omarchy.org.et/themes</span>
+                  </div>
+                </div>
+
+                <div className="flex flex-col items-center gap-3">
+                  <div className="rounded-xl bg-white p-3 shadow-lg">
+                    <Image
+                      src={themesQr}
+                      alt="QR code linking to the Omarchy Ethiopia theme leaderboard"
+                      width={168}
+                      height={168}
+                      className="h-40 w-40"
+                    />
+                  </div>
+                  <span className="font-mono text-[11px] text-cream/50">
+                    Scan to vote
+                  </span>
+                </div>
+              </div>
+            </section>
+          </div>
 
           {/* Embedded Luma Registration Card */}
           <div className="mt-24 pt-12 border-t border-white/[0.08]">

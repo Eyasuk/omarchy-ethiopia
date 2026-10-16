@@ -1,6 +1,7 @@
 [
   {
     "id": "2002",
+    "issue": 10,
     "name": "Lone Snow",
     "category": "Dark Theme",
     "link": "https://github.com/MahderK/omarchy-lone-snow-theme",
@@ -13,6 +14,7 @@
   },
   {
     "id": "2003",
+    "issue": 11,
     "name": "Golden Ethiopia",
     "category": "Dark Theme",
     "link": "https://github.com/samuelk37/omarchy-golden-ethiopia-theme",
@@ -25,6 +27,7 @@
   },
   {
     "id": "2007",
+    "issue": 12,
     "name": "Tibeb - \u1325\u1260\u1265",
     "category": "Dark Theme",
     "link": "https://github.com/dan-seng/tibeb-theme",

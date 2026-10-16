@@ -3,15 +3,20 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ThumbsUp } from "lucide-react";
 import OmarchyWordmark from "@/components/OmarchyWordmark";
+import ThemeLeaderboard from "@/components/ThemeLeaderboard";
+import { useThemeVotes, voteIssueUrl, type Theme } from "@/components/useThemeVotes";
 import themesData from "@/data/themes.json";
 
-export default function ThemesPage() {
-  const categories = [...new Set(themesData.map((theme) => theme.category))].sort();
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+const themes = themesData as Theme[];
 
-  const sortedThemes = [...themesData].sort(
+export default function ThemesPage() {
+  const categories = [...new Set(themes.map((theme) => theme.category))].sort();
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const { votes, loading, live, error, updatedAt, refresh } = useThemeVotes(themes);
+
+  const sortedThemes = [...themes].sort(
     (a, b) => Number(b.id) - Number(a.id),
   );
   const filteredThemes = selectedCategory
@@ -36,7 +41,7 @@ export default function ThemesPage() {
         <header className="pt-8 pb-8 text-center sm:pb-10">
           <OmarchyWordmark className="mx-auto mb-3 w-[59.5%] max-w-[26.775rem]" />
           <h1 className="text-xs font-medium uppercase tracking-[0.18em] text-tibeb-gold sm:text-sm">
-            omarchy ethiopia community theme
+            ethiopian theme competition
           </h1>
 
           <div className="mx-auto mt-6 max-w-xl text-center">
@@ -69,10 +74,10 @@ export default function ThemesPage() {
                     : "border-white/15 bg-white/[0.03] text-cream/80 hover:border-tibeb-gold hover:text-tibeb-gold"
                 }`}
               >
-                All ({themesData.length})
+                All ({themes.length})
               </button>
               {categories.map((category) => {
-                const count = themesData.filter(
+                const count = themes.filter(
                   (theme) => theme.category === category,
                 ).length;
                 return (
@@ -93,41 +98,74 @@ export default function ThemesPage() {
           )}
         </header>
 
+        {/* Live leaderboard */}
+        <ThemeLeaderboard
+          themes={themes}
+          votes={votes}
+          loading={loading}
+          live={live}
+          error={error}
+          updatedAt={updatedAt}
+          onRefresh={refresh}
+        />
+
         {/* Themes grid */}
-        <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2">
-          {filteredThemes.map((theme) => (
-            <li key={theme.id}>
-              <a
-                href={theme.link}
-                target="_blank"
-                rel="noreferrer"
-                className="group block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tibeb-gold"
-              >
-                <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-[#0b0c11] ring-1 ring-white/10 transition duration-300 group-hover:ring-tibeb-gold/40">
-                  {theme.screenshot ? (
-                    <Image
-                      src={theme.screenshot}
-                      alt={`${theme.name} theme screenshot`}
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-cover"
-                    />
-                  ) : (
-                    <span className="flex h-full w-full items-center justify-center font-mono text-4xl font-bold text-tibeb-gold/30">
-                      {theme.name.charAt(0)}
+        <ul className="mt-12 grid gap-x-6 gap-y-10 sm:grid-cols-2">
+          {filteredThemes.map((theme) => {
+            const issueUrl = voteIssueUrl(theme);
+            const voteCount = votes[theme.id] ?? 0;
+            return (
+              <li key={theme.id}>
+                <a
+                  href={theme.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tibeb-gold"
+                >
+                  <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-[#0b0c11] ring-1 ring-white/10 transition duration-300 group-hover:ring-tibeb-gold/40">
+                    {theme.screenshot ? (
+                      <Image
+                        src={theme.screenshot}
+                        alt={`${theme.name} theme screenshot`}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover"
+                      />
+                    ) : (
+                      <span className="flex h-full w-full items-center justify-center font-mono text-4xl font-bold text-tibeb-gold/30">
+                        {theme.name.charAt(0)}
+                      </span>
+                    )}
+                  </div>
+                </a>
+                <div className="mt-2.5 flex items-start justify-between gap-3">
+                  <a
+                    href={theme.link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="group min-w-0 text-sm font-medium text-cream transition-colors duration-150 hover:text-tibeb-gold"
+                  >
+                    <span className="block truncate">{theme.name}</span>
+                    <span className="block truncate font-normal text-cream/50">
+                      by {theme.author}
                     </span>
+                  </a>
+                  {issueUrl && (
+                    <a
+                      href={issueUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      title={`Vote for ${theme.name} on GitHub`}
+                      className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-tibeb-gold/40 bg-tibeb-gold/10 px-2.5 py-1.5 font-mono text-[11px] font-bold text-tibeb-gold transition hover:bg-tibeb-gold hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tibeb-gold"
+                    >
+                      <ThumbsUp className="h-3.5 w-3.5" />
+                      <span>{voteCount}</span>
+                    </a>
                   )}
                 </div>
-                <span className="mt-2.5 block text-sm font-medium text-cream transition-colors duration-150 group-hover:text-tibeb-gold">
-                  {theme.name}
-                  <span className="font-normal text-cream/50">
-                    {" "}
-                    by {theme.author}
-                  </span>
-                </span>
-              </a>
-            </li>
-          ))}
+              </li>
+            );
+          })}
         </ul>
 
         {filteredThemes.length === 0 && (

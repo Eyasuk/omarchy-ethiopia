@@ -4,17 +4,17 @@ import themesData from "../../data/themes.json";
 const themeCount = themesData.length;
 
 export const metadata: Metadata = {
-  title: `${themeCount} Themes`,
-  description: `Discover ${themeCount} community themes for Omarchy Linux shared by the Ethiopian Omarchy community. Customize your desktop with new visual styles.`,
+  title: "Ethiopian Theme Competition",
+  description: `Vote for your favourite Ethiopian Omarchy theme. ${themeCount} community-built themes competing for a 10,000 ETB prize pool, ranked live by community votes.`,
   openGraph: {
-    title: `${themeCount} Omarchy Themes`,
-    description: `Discover ${themeCount} community themes for Omarchy Linux shared by the Ethiopian Omarchy community.`,
+    title: "Ethiopian Theme Competition",
+    description: `Vote for your favourite Ethiopian Omarchy theme — ${themeCount} community-built themes ranked live by community votes.`,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: `${themeCount} Omarchy Themes`,
-    description: `Discover ${themeCount} community themes for Omarchy Linux shared by the Ethiopian Omarchy community.`,
+    title: "Ethiopian Theme Competition",
+    description: `Vote for your favourite Ethiopian Omarchy theme — ${themeCount} community-built themes ranked live by community votes.`,
   },
 };
 
