@@ -1,18 +1,5 @@
 [
   {
-    "id": "2002",
-    "issue": 10,
-    "name": "Lone Snow",
-    "category": "Dark Theme",
-    "link": "https://github.com/MahderK/omarchy-lone-snow-theme",
-    "author": "Mahder Kassaw",
-    "screenshot": "https://raw.githubusercontent.com/MahderK/omarchy-lone-snow-theme/main/preview.png",
-    "tags": [
-      "unofficial",
-      "ethiopia"
-    ]
-  },
-  {
     "id": "2003",
     "issue": 11,
     "name": "Golden Ethiopia",
@@ -33,6 +20,32 @@
     "link": "https://github.com/dan-seng/tibeb-theme",
     "author": "Daniel Gidey",
     "screenshot": "https://raw.githubusercontent.com/dan-seng/tibeb-theme/main/preview.png",
+    "tags": [
+      "unofficial",
+      "ethiopia"
+    ]
+  },
+  {
+    "id": "2008",
+    "issue": 13,
+    "name": "Ethiopia",
+    "category": "Dark Theme",
+    "link": "https://github.com/Eyasuk/omarchy-ethiopia-theme",
+    "author": "Eyasu Kibru",
+    "screenshot": "https://raw.githubusercontent.com/Eyasuk/omarchy-ethiopia-theme/main/preview.png",
+    "tags": [
+      "unofficial",
+      "ethiopia"
+    ]
+  },
+  {
+    "id": "2009",
+    "issue": 14,
+    "name": "Red Sun",
+    "category": "Dark Theme",
+    "link": "https://github.com/MahderK/omarchy-red-sun-theme",
+    "author": "Mahder Kassaw",
+    "screenshot": "https://raw.githubusercontent.com/MahderK/omarchy-red-sun-theme/main/preview.png",
     "tags": [
       "unofficial",
       "ethiopia"
