@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ExternalLink, RefreshCw, ThumbsUp, Trophy } from "lucide-react";
 import type { Theme } from "./useThemeVotes";
 import { voteIssueUrl } from "./useThemeVotes";
+import { computeStandings, hasJudgeScores, judgePanel, judgeScale } from "./themeStandings";
 
 type ThemeLeaderboardProps = {
   themes: Theme[];
@@ -26,6 +27,31 @@ function formatTime(timestamp: number): string {
   return `${new Date(timestamp).toISOString().slice(11, 16)} UTC`;
 }
 
+function Stat({
+  label,
+  value,
+  highlight = false,
+}: {
+  label: string;
+  value: string | number;
+  highlight?: boolean;
+}) {
+  return (
+    <div className="text-right">
+      <div
+        className={`font-mono font-bold ${
+          highlight ? "text-base text-cream" : "text-sm text-cream/75"
+        }`}
+      >
+        {value}
+      </div>
+      <div className="font-mono text-[10px] uppercase tracking-wider text-cream/40">
+        {label}
+      </div>
+    </div>
+  );
+}
+
 export default function ThemeLeaderboard({
   themes,
   votes,
@@ -35,15 +61,10 @@ export default function ThemeLeaderboard({
   updatedAt,
   onRefresh,
 }: ThemeLeaderboardProps) {
-  const ranked = [...themes]
-    .map((theme) => ({ theme, count: votes[theme.id] ?? 0 }))
-    .sort(
-      (a, b) => b.count - a.count || a.theme.name.localeCompare(b.theme.name),
-    );
-
-  const maxVotes = Math.max(1, ...ranked.map((entry) => entry.count));
-  const leader = ranked[0];
-  const hasVotes = ranked.some((entry) => entry.count > 0);
+  const standings = computeStandings(themes, votes);
+  const judgesPresent = hasJudgeScores();
+  const leader = standings[0];
+  const hasAny = standings.some((entry) => entry.finalScore > 0);
 
   return (
     <section
@@ -57,9 +78,18 @@ export default function ThemeLeaderboard({
             <span>Live Leaderboard</span>
           </h2>
           <p className="mt-1 text-xs text-cream/60 sm:text-sm">
-            Community votes via GitHub reactions. React on a theme&apos;s issue
-            to move it up.
+            Final score = 50% expert judges + 50% community votes. Vote by
+            reacting on a theme&apos;s GitHub issue.
           </p>
+          {(judgePanel.length > 0 || judgeScale.length > 0) && (
+            <p className="mt-1 font-mono text-[11px] text-cream/45">
+              {judgePanel.length > 0 && <>Judged by {judgePanel.join(", ")}</>}
+              {judgePanel.length > 0 && judgeScale.length > 0 && " · "}
+              {judgeScale.length > 0 && (
+                <>rated 1–{judgeScale.length} ({judgeScale.join(" / ")})</>
+              )}
+            </p>
+          )}
         </div>
 
         <div className="flex items-center gap-3 font-mono text-[11px]">
@@ -99,81 +129,88 @@ export default function ThemeLeaderboard({
         </p>
       )}
 
-      {leader && hasVotes && (
+      {leader && hasAny && (
         <div className="mt-5 rounded-xl border border-tibeb-gold/40 bg-gradient-to-r from-tibeb-gold/15 to-transparent p-4">
           <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-tibeb-gold">
             Currently winning
           </p>
-          <div className="mt-2 flex items-baseline gap-3">
+          <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <span className="text-xl font-bold text-white sm:text-2xl">
               {leader.theme.name}
             </span>
             <span className="font-mono text-sm text-cream/60">
-              {leader.count} {leader.count === 1 ? "vote" : "votes"}
+              final {Math.round(leader.finalScore)} / 100
             </span>
           </div>
         </div>
       )}
 
       <ol className="mt-5 space-y-2.5">
-        {ranked.map(({ theme, count }, index) => {
-          const rank = index + 1;
-          const issueUrl = voteIssueUrl(theme);
-          const width = count > 0 ? Math.max(6, (count / maxVotes) * 100) : 0;
+        {standings.map((entry) => {
+          const issueUrl = voteIssueUrl(entry.theme);
+          const width = Math.max(0, Math.min(100, entry.finalScore));
 
           return (
             <li
-              key={theme.id}
+              key={entry.theme.id}
               className={`flex flex-wrap items-center gap-3 rounded-xl border p-3 transition sm:gap-4 sm:p-4 ${
-                rank === 1
+                entry.rank === 1
                   ? "border-tibeb-gold/40 bg-[#0e0f14]"
                   : "border-white/10 bg-[#0e0f14]"
               }`}
             >
               <span
-                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border font-mono text-sm font-bold ${rankStyles(rank)}`}
+                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border font-mono text-sm font-bold ${rankStyles(entry.rank)}`}
               >
-                {rank}
+                {entry.rank}
               </span>
 
               <div className="relative hidden h-11 w-20 shrink-0 overflow-hidden rounded-md bg-[#0b0c11] ring-1 ring-white/10 sm:block">
-                {theme.screenshot ? (
+                {entry.theme.screenshot ? (
                   <Image
-                    src={theme.screenshot}
-                    alt={`${theme.name} theme screenshot`}
+                    src={entry.theme.screenshot}
+                    alt={`${entry.theme.name} theme screenshot`}
                     fill
                     sizes="80px"
                     className="object-cover"
                   />
                 ) : (
                   <span className="flex h-full w-full items-center justify-center font-mono text-base font-bold text-tibeb-gold/30">
-                    {theme.name.charAt(0)}
+                    {entry.theme.name.charAt(0)}
                   </span>
                 )}
               </div>
 
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium text-white">
-                  {theme.name}
+                  {entry.theme.name}
                 </p>
                 <p className="truncate font-mono text-[11px] text-cream/50">
-                  {theme.author}
+                  {entry.theme.author}
                 </p>
               </div>
 
-              <div className="flex w-full items-center gap-3 sm:w-auto sm:min-w-[9rem]">
-                <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10">
+              <div className="flex w-full items-center gap-4 sm:w-auto">
+                <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10 sm:w-24">
                   <div
                     className="h-full rounded-full bg-tibeb-gold transition-all duration-500"
                     style={{ width: `${width}%` }}
                   />
                 </div>
-                <span className="w-20 text-right font-mono text-sm font-bold text-cream">
-                  {loading && !(theme.id in votes) ? "…" : `${count}`}
-                  <span className="ml-1 text-[11px] font-normal text-cream/50">
-                    {count === 1 ? "vote" : "votes"}
-                  </span>
-                </span>
+                <div className="flex items-center gap-4">
+                  <Stat label="final" value={Math.round(entry.finalScore)} highlight />
+                  <Stat
+                    label="judge"
+                    value={
+                      entry.judgeScore !== null
+                        ? Math.round(entry.judgeScore)
+                        : judgesPresent
+                          ? "—"
+                          : "n/a"
+                    }
+                  />
+                  <Stat label="votes" value={entry.votes} />
+                </div>
               </div>
 
               {issueUrl && (
@@ -193,7 +230,7 @@ export default function ThemeLeaderboard({
         })}
       </ol>
 
-      {ranked.length === 0 && (
+      {standings.length === 0 && (
         <p className="mt-5 rounded-lg border border-white/10 bg-[#0e0f14] p-6 text-center font-mono text-sm text-cream/60">
           No themes to rank yet.
         </p>

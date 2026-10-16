@@ -1,0 +1,17 @@
+{
+  "updatedAt": null,
+  "scale": {
+    "1": "Weak",
+    "2": "Solid",
+    "3": "Outstanding"
+  },
+  "rubric": {
+    "cultural_authenticity": 0.3,
+    "visual_craft": 0.25,
+    "completeness": 0.2,
+    "originality": 0.15,
+    "install_docs": 0.1
+  },
+  "judges": [],
+  "scores": {}
+}
