@@ -1,6 +1,6 @@
 Omarchy Ethiopia — Theme Competition: judging guide
-"Rate each of the 5 criteria from 1 to 3. One row per theme, per judge.",
-"Only fill the five score columns in the Scores tab. Leave a row blank if you did not judge that theme.",
+"Rate each of the 2 criteria from 1 to 3. One row per theme, per judge.",
+"Only fill the two score columns in the Scores tab. Leave a row blank if you did not judge that theme.",
 ,
 Scale,Meaning
 1,Weak
@@ -8,13 +8,10 @@ Scale,Meaning
 3,Outstanding
 ,
 Criterion,Weight,What to look for
-cultural_authenticity,30%,How deeply and distinctly Ethiopian the theme feels
-visual_craft,25%,"Cohesive palette, contrast, readability, overall polish"
-completeness,20%,"Styles the whole system: bar, terminal, nvim, btop, lockscreen, and more"
-originality,15%,"Your own concept, not a reskin of an upstream theme"
-install_docs,10%,Installs cleanly and is documented
+cultural_authenticity,50%,How deeply and distinctly Ethiopian the theme feels
+visual_craft,50%,"Cohesive palette, contrast, readability, overall polish"
 ,
 Notes
 "theme_id and theme are pre-filled — please do not change them.",
 "Use the same standard for every theme so scores stay comparable.",
-"Your score of 1, 2, or 3 in each of the five columns is all we need.",
+"Your score of 1, 2, or 3 in each of the two columns is all we need.",

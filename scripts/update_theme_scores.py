@@ -28,11 +28,8 @@ THEMES_PATH = BASE_DIR / "data" / "themes.json"
 OUTPUT_PATH = BASE_DIR / "data" / "theme-scores.json"
 
 RUBRIC = [
-    ("cultural_authenticity", 0.30),
-    ("visual_craft", 0.25),
-    ("completeness", 0.20),
-    ("originality", 0.15),
-    ("install_docs", 0.10),
+    ("cultural_authenticity", 0.50),
+    ("visual_craft", 0.50),
 ]
 
 SCALE = {
@@ -53,9 +50,6 @@ LEVEL_WORDS = {
 COLUMN_ALIASES = {
     "cultural_authenticity": {"culturalauthenticity", "authenticity", "culture", "cultural", "heritage"},
     "visual_craft": {"visualcraft", "craft", "visuals", "visual", "aesthetics", "design"},
-    "completeness": {"completeness", "complete", "coverage"},
-    "originality": {"originality", "original", "unique", "uniqueness"},
-    "install_docs": {"installdocs", "docs", "install", "documentation", "usability"},
 }
 
 JUDGE_KEYS = {"judge", "judgename", "judgeid", "name", "judge_name"}
