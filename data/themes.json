@@ -50,5 +50,17 @@
       "unofficial",
       "ethiopia"
     ]
+  },
+  {
+    "id": "2010",
+    "issue": 15,
+    "name": "Ethiopia Retro",
+    "category": "Dark Theme",
+    "link": "https://github.com/Abemelek97/ethiopia-retro-themes",
+    "author": "Abemelek",
+    "tags": [
+      "unofficial",
+      "ethiopia"
+    ]
   }
 ]
