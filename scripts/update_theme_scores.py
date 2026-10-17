@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Sync expert judge scores from a published Google Sheet.
+"""Sync expert judge scores from published Google Sheet tabs.
 
-Judges fill a sheet (see scripts/judging-sheet-template.csv). The sheet is
-published to the web as CSV and its URL is provided via JUDGE_SHEET_CSV_URL
-(a repo variable in CI). This script turns the rows into data/theme-scores.json,
-which the site bakes in as the expert half of the leaderboard.
+Each judge fills their own tab (see scripts/judging-sheet-<judge>.csv). Every
+tab is published to the web as CSV, and the URLs are provided via
+JUDGE_SHEET_CSV_URLS (comma-separated; JUDGE_SHEET_CSV_URL still works for a
+single tab). This script merges the rows into data/theme-scores.json, which the
+site bakes in as the expert half of the leaderboard.
 
 Each criterion is rated on a 1-3 scale (1 = weak, 2 = solid, 3 = outstanding).
 Levels are rescaled to 0-100 so they line up with the community score.
@@ -72,6 +73,15 @@ def fetch_csv(url):
         return response.read().decode("utf-8-sig")
 
 
+def sheet_urls():
+    raw = (
+        os.environ.get("JUDGE_SHEET_CSV_URLS")
+        or os.environ.get("JUDGE_SHEET_CSV_URL")
+        or ""
+    )
+    return [part.strip() for part in re.split(r"[,\n]", raw) if part.strip()]
+
+
 def resolve_columns(fieldnames):
     mapping = {}
     for header in fieldnames or []:
@@ -123,33 +133,14 @@ def match_theme(lookup, raw):
     return None
 
 
-def main():
-    url = (os.environ.get("JUDGE_SHEET_CSV_URL") or "").strip()
-    if not url:
-        print("JUDGE_SHEET_CSV_URL not set; skipping judge score sync.")
-        return 0
-
-    themes = json.loads(THEMES_PATH.read_text(encoding="utf-8"))
-    lookup = build_theme_lookup(themes)
-
-    try:
-        raw = fetch_csv(url)
-    except Exception as exc:
-        print(f"error: could not fetch judge sheet: {exc}", file=sys.stderr)
-        return 1
-
+def ingest(raw, lookup, valid_ids, totals, judges):
     reader = csv.DictReader(io.StringIO(raw))
     columns = resolve_columns(reader.fieldnames)
 
     missing = [key for key, _ in RUBRIC if key not in columns]
     if "judge" not in columns or not ("theme_id" in columns or "theme" in columns) or missing:
-        print(f"error: sheet is missing expected columns (found {reader.fieldnames})", file=sys.stderr)
-        return 1
+        raise ValueError(f"missing expected columns (found {reader.fieldnames})")
 
-    valid_ids = {theme["id"] for theme in themes}
-
-    totals = {}
-    judges = []
     for row in reader:
         judge = (row.get(columns["judge"]) or "").strip()
         raw_id = (row.get(columns.get("theme_id", "")) or "").strip()
@@ -176,12 +167,36 @@ def main():
         total = sum((levels[key] / SCALE_MAX) * weight for key, weight in RUBRIC) * 100
         totals.setdefault(theme_id, []).append(round(total, 1))
 
+
+def main():
+    urls = sheet_urls()
+    if not urls:
+        print("JUDGE_SHEET_CSV_URLS not set; skipping judge score sync.")
+        return 0
+
+    themes = json.loads(THEMES_PATH.read_text(encoding="utf-8"))
+    lookup = build_theme_lookup(themes)
+    valid_ids = {theme["id"] for theme in themes}
+
+    totals = {}
+    judges = []
+    for url in urls:
+        try:
+            raw = fetch_csv(url)
+        except Exception as exc:
+            print(f"error: could not fetch judge sheet {url}: {exc}", file=sys.stderr)
+            return 1
+        try:
+            ingest(raw, lookup, valid_ids, totals, judges)
+        except ValueError as exc:
+            print(f"error: {url}: {exc}", file=sys.stderr)
+            return 1
+
     scores_out = {}
     for theme in themes:
-        theme_id = theme["id"]
-        entries = totals.get(theme_id, [])
+        entries = totals.get(theme["id"], [])
         if entries:
-            scores_out[theme_id] = {
+            scores_out[theme["id"]] = {
                 "average": round(sum(entries) / len(entries), 1),
                 "count": len(entries),
             }

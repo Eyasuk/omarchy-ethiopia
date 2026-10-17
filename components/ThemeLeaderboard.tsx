@@ -4,7 +4,7 @@ import Image from "next/image";
 import { ExternalLink, RefreshCw, ThumbsUp, Trophy } from "lucide-react";
 import type { Theme } from "./useThemeVotes";
 import { voteIssueUrl } from "./useThemeVotes";
-import { computeStandings, hasJudgeScores, judgePanel, judgeScale } from "./themeStandings";
+import { computeStandings, hasJudgeScores } from "./themeStandings";
 
 type ThemeLeaderboardProps = {
   themes: Theme[];
@@ -23,8 +23,15 @@ function rankStyles(rank: number): string {
   return "border-white/15 bg-white/[0.03] text-cream/70";
 }
 
+const EAT_TIME = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "Africa/Addis_Ababa",
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
+});
+
 function formatTime(timestamp: number): string {
-  return `${new Date(timestamp).toISOString().slice(11, 16)} UTC`;
+  return `${EAT_TIME.format(new Date(timestamp))} EAT`;
 }
 
 function Stat({
@@ -71,61 +78,36 @@ export default function ThemeLeaderboard({
       id="leaderboard"
       className="mt-12 scroll-mt-20 rounded-2xl border border-white/10 bg-[#0b0c11] p-5 sm:p-7"
     >
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="flex items-center gap-2 text-lg font-bold tracking-tight text-white sm:text-xl">
             <Trophy className="h-5 w-5 text-tibeb-gold" />
-            <span>Live Leaderboard</span>
+            <span>Leaderboard</span>
           </h2>
-          <p className="mt-1 text-xs text-cream/60 sm:text-sm">
-            Final score = 50% expert judges + 50% community votes. Vote by
-            reacting on a theme&apos;s GitHub issue.
+          <p className="mt-1 text-xs text-cream/55">
+            50% expert judges · 50% community votes
           </p>
-          {(judgePanel.length > 0 || judgeScale.length > 0) && (
-            <p className="mt-1 font-mono text-[11px] text-cream/45">
-              {judgePanel.length > 0 && <>Judged by {judgePanel.join(", ")}</>}
-              {judgePanel.length > 0 && judgeScale.length > 0 && " · "}
-              {judgeScale.length > 0 && (
-                <>rated 1–{judgeScale.length} ({judgeScale.join(" / ")})</>
-              )}
-            </p>
-          )}
         </div>
 
-        <div className="flex items-center gap-3 font-mono text-[11px]">
-          {live ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-ethiopia-green/40 bg-ethiopia-green/10 px-3 py-1 font-bold tracking-wider text-ethiopia-green">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-ethiopia-green" />
-              LIVE
-            </span>
-          ) : (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/[0.03] px-3 py-1 font-bold tracking-wider text-cream/60">
-              SYNCED
-            </span>
-          )}
-          {loading ? (
-            <span className="text-cream/50">updating…</span>
-          ) : updatedAt ? (
-            <span className="text-cream/50">{formatTime(updatedAt)}</span>
-          ) : null}
+        <div className="flex items-center gap-2 font-mono text-[11px] text-cream/45">
+          {updatedAt ? <span>{formatTime(updatedAt)}</span> : null}
           <button
             type="button"
             onClick={onRefresh}
             disabled={loading}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/[0.03] px-3 py-1 text-cream/80 transition hover:border-tibeb-gold hover:text-tibeb-gold disabled:cursor-not-allowed disabled:opacity-50"
+            title="Refresh votes"
+            aria-label="Refresh votes"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/15 bg-white/[0.03] text-cream/70 transition hover:border-tibeb-gold hover:text-tibeb-gold disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <RefreshCw className={`h-3 w-3 ${loading ? "animate-spin" : ""}`} />
-            <span>Refresh</span>
+            <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
           </button>
         </div>
       </div>
 
       {!live && error && (
-        <p className="mt-4 rounded-lg border border-tibeb-gold/30 bg-tibeb-gold/5 px-4 py-3 font-mono text-xs text-cream/70">
-          Live GitHub votes are unavailable right now, so these are the last
-          synced totals
-          {updatedAt ? ` (${formatTime(updatedAt)})` : ""}. They refresh
-          automatically.
+        <p className="mt-4 rounded-lg border border-white/10 bg-white/[0.02] px-4 py-3 font-mono text-xs text-cream/60">
+          Showing last synced votes
+          {updatedAt ? ` (${formatTime(updatedAt)})` : ""}.
         </p>
       )}
 

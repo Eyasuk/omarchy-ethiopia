@@ -48,6 +48,7 @@ jobs:
         if: steps.window.outputs.active == 'true'
         env:
           JUDGE_SHEET_CSV_URL: ${{ vars.JUDGE_SHEET_CSV_URL }}
+          JUDGE_SHEET_CSV_URLS: ${{ vars.JUDGE_SHEET_CSV_URLS }}
         run: python3 scripts/update_theme_scores.py
 
       - name: Commit changes

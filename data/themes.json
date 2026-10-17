@@ -65,11 +65,12 @@
   },
   {
     "id": "2011",
-    "issue": 16,
-    "name": "piassa-nostalgia",
+    "issue": 17,
+    "name": "Piassa Nostalgia",
     "category": "Dark Theme",
     "link": "https://github.com/YeabsiraM290/omarchy-piassa-nostalgia-theme",
     "author": "Yeabsira",
+    "screenshot": "https://raw.githubusercontent.com/YeabsiraM290/omarchy-piassa-nostalgia-theme/main/preview.jpg",
     "tags": [
       "unofficial",
       "ethiopia"
