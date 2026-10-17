@@ -75,5 +75,18 @@
       "unofficial",
       "ethiopia"
     ]
+  },
+  {
+    "id": "2012",
+    "issue": 18,
+    "name": "Ethio Dusk",
+    "category": "Dark Theme",
+    "link": "https://github.com/EyuReaper/Ethio-dusk",
+    "author": "Eyuel Getachew",
+    "screenshot": "https://raw.githubusercontent.com/EyuReaper/Ethio-dusk/main/preview.png",
+    "tags": [
+      "unofficial",
+      "ethiopia"
+    ]
   }
 ]
