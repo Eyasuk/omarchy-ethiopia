@@ -1,18 +1,41 @@
 {
-  "updatedAt": null,
+  "judges": [
+    "Nati"
+  ],
+  "rubric": {
+    "cultural_authenticity": 0.5,
+    "visual_craft": 0.5
+  },
   "scale": {
     "1": "Weak",
     "2": "Solid",
     "3": "Outstanding"
   },
-  "rubric": {
-    "cultural_authenticity": 0.5,
-    "visual_craft": 0.5
+  "scores": {
+    "2003": {
+      "average": 66.7,
+      "count": 1
+    },
+    "2007": {
+      "average": 66.7,
+      "count": 1
+    },
+    "2008": {
+      "average": 66.7,
+      "count": 1
+    },
+    "2009": {
+      "average": 66.7,
+      "count": 1
+    },
+    "2010": {
+      "average": 100.0,
+      "count": 1
+    },
+    "2011": {
+      "average": 66.7,
+      "count": 1
+    }
   },
-  "judges": [
-    "Dagmawi Babi",
-    "Chapi",
-    "Nati"
-  ],
-  "scores": {}
+  "updatedAt": "2026-10-17T04:25:44Z"
 }
