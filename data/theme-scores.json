@@ -13,31 +13,6 @@
     "2": "Solid",
     "3": "Outstanding"
   },
-  "scores": {
-    "2003": {
-      "average": 55.6,
-      "count": 3
-    },
-    "2007": {
-      "average": 55.6,
-      "count": 3
-    },
-    "2008": {
-      "average": 55.6,
-      "count": 3
-    },
-    "2009": {
-      "average": 55.6,
-      "count": 3
-    },
-    "2010": {
-      "average": 100.0,
-      "count": 3
-    },
-    "2011": {
-      "average": 77.8,
-      "count": 3
-    }
-  },
-  "updatedAt": "2026-10-17T04:42:27Z"
+  "scores": {},
+  "updatedAt": "2026-10-17T04:52:12Z"
 }
