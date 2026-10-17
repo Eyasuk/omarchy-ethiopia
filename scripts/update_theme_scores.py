@@ -20,6 +20,8 @@ import json
 import os
 import re
 import sys
+import time
+import urllib.error
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
@@ -59,6 +61,12 @@ THEME_ID_KEYS = {"themeid", "themeidnumber", "themekey", "id"}
 
 SCALE_MAX = 3.0
 
+USER_AGENT = (
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+)
+RETRY_STATUS = {400, 401, 403, 429, 500, 502, 503, 504}
+
 
 def normalize(value):
     return re.sub(r"[^a-z0-9]+", "", str(value).strip().lower())
@@ -68,9 +76,29 @@ def now_iso():
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
-def fetch_csv(url):
-    with urllib.request.urlopen(url, timeout=30) as response:
-        return response.read().decode("utf-8-sig")
+def fetch_csv(url, attempts=5):
+    """Fetch a published sheet CSV, retrying Google's intermittent 401/login pages."""
+    last_error = None
+    for attempt in range(1, attempts + 1):
+        try:
+            request = urllib.request.Request(
+                url,
+                headers={"User-Agent": USER_AGENT, "Accept": "text/csv,*/*"},
+            )
+            with urllib.request.urlopen(request, timeout=30) as response:
+                body = response.read().decode("utf-8-sig")
+            if body.lstrip().startswith("<"):
+                raise ValueError("got an HTML page instead of CSV (likely an access challenge)")
+            return body
+        except urllib.error.HTTPError as exc:
+            last_error = exc
+            if exc.code not in RETRY_STATUS:
+                raise
+        except Exception as exc:
+            last_error = exc
+        if attempt < attempts:
+            time.sleep(min(2 ** attempt, 15))
+    raise last_error if last_error else RuntimeError("fetch failed")
 
 
 def sheet_urls():
