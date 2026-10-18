@@ -89,5 +89,29 @@
       "unofficial",
       "ethiopia"
     ]
+  },
+  {
+    "id": "2012",
+    "issue": 17,
+    "name": "NooXShell",
+    "category": "Dark Theme",
+    "link": "https://github.com/whonoox/quickshell",
+    "author": "NooX",
+    "tags": [
+      "unofficial",
+      "ethiopia"
+    ]
+  },
+  {
+    "id": "2013",
+    "issue": 18,
+    "name": "Pulse",
+    "category": "Dark Theme",
+    "link": "https://github.com/hunde32/hyprland-dotfiles",
+    "author": "Hundaol",
+    "tags": [
+      "unofficial",
+      "ethiopia"
+    ]
   }
 ]
